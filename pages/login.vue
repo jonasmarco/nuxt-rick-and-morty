@@ -51,4 +51,8 @@ const login = () => {
     error.value = "Preencha todos os campos.";
   }
 };
+
+useHead({
+  title: "Login",
+});
 </script>

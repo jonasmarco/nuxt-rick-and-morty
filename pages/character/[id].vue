@@ -33,15 +33,11 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed } from "vue";
-import { useFetch } from "#app";
-import LoadingSpinner from "~/components/LoadingSpinner.vue";
-import { useUserStore } from "~/stores/user";
-import { useRoute } from "#app";
+const config = useRuntimeConfig();
 
 const route = useRoute();
 const { data: character, pending, error } = await useFetch(
-  `https://rickandmortyapi.com/api/character/${route.params.id}`
+  `${config.public.apiBase}/character/${route.params.id}`
 );
 
 const user = useUserStore();
@@ -54,7 +50,6 @@ const toggleFavorite = (id: number) => {
   }
 };
 
-// Exemplo de SEO dinâmico (pode ser ajustado conforme a disponibilidade dos dados)
 if (character.value) {
   useHead({
     title: `${character.value.name} - Detalhes`,

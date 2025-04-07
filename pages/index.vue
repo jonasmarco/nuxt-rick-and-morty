@@ -8,33 +8,51 @@
       <p class="text-red-500">Erro ao carregar os personagens.</p>
     </div>
     <div v-else>
-      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-        <div
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mb-8">
+        <CharacterCard
           v-for="character in characters.results"
           :key="character.id"
-          class="bg-white shadow rounded p-4 hover:shadow-lg transition"
+          :character="character"
+        />
+      </div>
+
+      <div class="flex justify-center items-center gap-4 my-8">
+        <button
+          @click="currentPage--"
+          :disabled="currentPage === 1"
+          class="px-4 py-2 rounded bg-blue-500 text-white disabled:bg-gray-300 disabled:cursor-not-allowed"
         >
-          <img
-            :src="character.image"
-            :alt="character.name"
-            class="w-full h-48 object-cover rounded"
-          />
-          <h2 class="mt-2 font-bold">{{ character.name }}</h2>
-          <NuxtLink
-            :to="`/character/${character.id}`"
-            class="text-blue-500 hover:underline"
-          >
-            Ver Detalhes
-          </NuxtLink>
-        </div>
+          Anterior
+        </button>
+        <span class="text-lg">
+          Página {{ currentPage }} de {{ characters.info.pages }}
+        </span>
+        <button
+          @click="currentPage++"
+          :disabled="currentPage === characters.info.pages"
+          class="px-4 py-2 rounded bg-blue-500 text-white disabled:bg-gray-300 disabled:cursor-not-allowed"
+        >
+          Próxima
+        </button>
       </div>
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
-import LoadingSpinner from "~/components/LoadingSpinner.vue";
+const config = useRuntimeConfig();
+const currentPage = ref(1);
+
 const { data: characters, pending, error } = await useFetch(
-  "https://rickandmortyapi.com/api/character"
+  () => `${config.public.apiBase}/character?page=${currentPage.value}`,
+  { watch: [currentPage] }
 );
+
+watch(currentPage, () => {
+  window.scrollTo({ top: 0, behavior: "smooth" });
+});
+
+useHead({
+  title: "Home",
+});
 </script>

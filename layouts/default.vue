@@ -7,7 +7,6 @@
           <NuxtLink to="/favorites" class="mr-4 hover:underline">Favoritos</NuxtLink>
         </div>
         <div>
-          <!-- Exibe login ou logout conforme o estado do usuário -->
           <NuxtLink v-if="!user.isLoggedIn" to="/login" class="hover:underline"
             >Login</NuxtLink
           >
@@ -25,7 +24,6 @@
 </template>
 
 <script setup lang="ts">
-import { useUserStore } from "~/stores/user";
 const user = useUserStore();
 const logout = () => {
   user.logout();

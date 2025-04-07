@@ -8,7 +8,6 @@ export default defineNuxtPlugin(() => {
     timeout: 10000
   })
 
-  // Interceptador para tratamento de erros
   api.interceptors.response.use(
     (response) => response,
     (error) => {

@@ -1,13 +1,41 @@
+<template>
+  <div>
+    <h1 class="text-2xl font-bold mb-4">Meus Favoritos</h1>
+    <ClientOnly>
+      <template #default>
+        <div v-if="!favoriteCharacters.length">
+          <p>Você ainda não adicionou nenhum favorito.</p>
+        </div>
+        <div v-else>
+          <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+            <CharacterCard
+              v-for="character in favoriteCharacters"
+              :key="character.id"
+              :character="character"
+            />
+          </div>
+        </div>
+      </template>
+      <template #fallback>
+        <p>Carregando favoritos...</p>
+      </template>
+    </ClientOnly>
+  </div>
+</template>
+
 <script setup lang="ts">
 definePageMeta({
   middleware: "auth",
+});
+
+useHead({
+  title: "Favoritos",
 });
 
 import { useUserStore } from "~/stores/user";
 import { computed, ref, onMounted } from "vue";
 import { useRuntimeConfig } from "#app";
 import { useFetch } from "#app";
-import LoadingSpinner from "~/components/LoadingSpinner.vue";
 
 const user = useUserStore();
 const favorites = computed(() => user.favorites);
@@ -27,34 +55,3 @@ onMounted(async () => {
   }
 });
 </script>
-
-<template>
-  <div>
-    <h1 class="text-2xl font-bold mb-4">Meus Favoritos</h1>
-    <div v-if="!favoriteCharacters.length">
-      <p>Você ainda não adicionou nenhum favorito.</p>
-    </div>
-    <div v-else>
-      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-        <div
-          v-for="character in favoriteCharacters"
-          :key="character.id"
-          class="bg-white shadow rounded p-4 hover:shadow-lg transition"
-        >
-          <img
-            :src="character.image"
-            :alt="character.name"
-            class="w-full h-48 object-cover rounded"
-          />
-          <h2 class="mt-2 font-bold">{{ character.name }}</h2>
-          <NuxtLink
-            :to="`/character/${character.id}`"
-            class="text-blue-500 hover:underline"
-          >
-            Ver Detalhes
-          </NuxtLink>
-        </div>
-      </div>
-    </div>
-  </div>
-</template>
